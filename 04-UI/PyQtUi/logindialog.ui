@@ -22,6 +22,9 @@
      <height>32</height>
     </rect>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::TabFocus</enum>
+   </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
@@ -64,6 +67,9 @@
      <height>23</height>
     </rect>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::StrongFocus</enum>
+   </property>
    <property name="echoMode">
     <enum>QLineEdit::Password</enum>
    </property>
@@ -76,6 +82,9 @@
      <width>161</width>
      <height>23</height>
     </rect>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::StrongFocus</enum>
    </property>
   </widget>
  </widget>
@@ -115,6 +124,38 @@
     <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>txtPassword</sender>
+   <signal>returnPressed()</signal>
+   <receiver>LoginDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>108</x>
+     <y>71</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>52</x>
+     <y>90</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>txtUsername</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>txtPassword</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>32</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>159</x>
+     <y>62</y>
     </hint>
    </hints>
   </connection>

@@ -1,22 +1,26 @@
 import unittest
-from PyQt4.QtCore import QCoreApplication
+import sys
+
+from PyQt5.QtCore import QCoreApplication
+
 from auth import Auth
 import helper
-import sys
+
 
 class TestCase01(unittest.TestCase):
     def testConnect(self):
-        qApp = QCoreApplication(sys.argv)
-        self.assertTrue(helper.dbConnect())
+        q_app = QCoreApplication(sys.argv)
+        self.assertTrue(helper.db_connect())
 
     def testMd5(self):
-        self.assertEqual(helper.computeHash("password"),"5f4dcc3b5aa765d61d8327deb882cf99")
+        self.assertEqual(helper.compute_hash("password"), "5f4dcc3b5aa765d61d8327deb882cf99")
 
     def testAuth(self):
-        qApp = QCoreApplication(sys.argv)
-        helper.dbConnect()
+        q_app = QCoreApplication(sys.argv)
+        helper.db_connect()
         auth = Auth()
-        self.assertEqual(auth.doLogin("eko", "password"), True)
+        self.assertEqual(auth.do_login("eko", "password"), True)
+
 
 if __name__ == "__main__":
     unittest.main()

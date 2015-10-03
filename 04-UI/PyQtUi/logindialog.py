@@ -1,48 +1,60 @@
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtGui import QDialog, QMessageBox
+from PyQt5.QtWidgets import QDialog, QMessageBox, QApplication
+from PyQt5.QtCore import Qt
+
 from ui_logindialog import Ui_LoginDialog
 from auth import Auth
 
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
+
+# try:
+#     _fromUtf8 = QtCore.QString.fromUtf8
+# except AttributeError:
+#     def _fromUtf8(s):
+#         return s
 
 try:
-    _encoding = QtGui.QApplication.UnicodeUTF8
+    _encoding = QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+        return QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
-        return QtGui.QApplication.translate(context, text, disambig)
+        return QApplication.translate(context, text, disambig)
+
 
 class LoginDialog(QDialog, Ui_LoginDialog):
-    Success,Failed,Rejected = range(0,3)
+    Exit, Success, Failed, Rejected = range(0, 4)
+
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), self.onAccept)
-        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), self.onReject)
+        self.buttonBox.accepted.connect(self.on_accept)
+        self.accepted.connect(self.on_accept)
+        self.buttonBox.rejected.connect(self.on_cancel)
 
-    def onAccept(self):
+    def closeEvent(self, event):
+        self.setResult(self.Exit)
+
+    def keyPressEvent(self, e):
+        if e.key() == Qt.Key_Escape:
+            self.setResult(self.Rejected)
+
+    def on_cancel(self):
+        self.setResult(self.Exit)
+
+    def on_accept(self):
 
         auth = Auth()
-        if auth.doLogin(self.txtUsername.text(), self.txtPassword.text()):
+        if auth.do_login(self.txtUsername.text(), self.txtPassword.text()):
             self.setResult(self.Success)
         else:
-            msgBox = QMessageBox(self)
-            msgBox.setIcon(QMessageBox.Warning)
-            msgBox.setWindowTitle(_translate("LoginDialog", "Pythonthusiast", None))
-            msgBox.setText(_translate("LoginDialog", "Either incorrect username and/or password. Try again!", None))
-            msgBox.setStandardButtons(QMessageBox.Ok)
-            msgBox.exec_()
+            msg_box = QMessageBox(self)
+            msg_box.setIcon(QMessageBox.Warning)
+            msg_box.setWindowTitle(_translate("LoginDialog", "Pythonthusiast", None))
+            msg_box.setText(_translate("LoginDialog", "Either incorrect username and/or password. Try again!", None))
+            msg_box.setStandardButtons(QMessageBox.Ok)
+            msg_box.exec_()
             self.setResult(self.Failed)
 
-    def onReject(self):
+    def on_reject(self):
         self.setResult(self.Rejected)
-
-
-
-
-

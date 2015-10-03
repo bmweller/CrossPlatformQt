@@ -1,10 +1,11 @@
-from PyQt4.QtCore import *
-from PyQt4.QtSql import *
+from PyQt5.QtCore import *
+from PyQt5.QtSql import *
 
-def dbConnect():
+
+def db_connect():
     db = QSqlDatabase.addDatabase("QSQLITE")
     filename = "pythonthusiast.db"
-    database =  QFile(filename)
+    database = QFile(filename)
     if not database.exists():
         qDebug("Database not found. Creating and opening")
         db.setDatabaseName(filename)
@@ -16,7 +17,7 @@ def dbConnect():
                     "password varchar(255))")
         query.prepare("insert into qtapp_users(username, password) values(:username, :password)")
         query.bindValue(":username", "eko")
-        query.bindValue(":password", computeHash("password"))
+        query.bindValue(":password", compute_hash("password"))
         query.exec_()
     else:
         qDebug("Database found. Opening")
@@ -24,6 +25,8 @@ def dbConnect():
         db.open()
     return db.isOpen()
 
-def computeHash(original):
-    #  return QCryptographicHash.hash(QString(original).toUtf8(), QCryptographicHash.Md5).toHex() #a much more Qt centric
-    return QCryptographicHash.hash(original, QCryptographicHash.Md5).toHex()
+
+def compute_hash(original):
+    # a much more Qt centric
+    return QCryptographicHash.hash(original.encode(encoding='UTF-8'), QCryptographicHash.Md5).toHex()
+    # return QCryptographicHash.hash(original, QCryptographicHash.Md5).toHex()
